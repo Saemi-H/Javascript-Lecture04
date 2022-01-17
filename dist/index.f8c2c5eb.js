@@ -563,18 +563,26 @@ const getData = (url)=>{
     ajax.send();
     return JSON.parse(ajax.response);
 };
-const newsFeed = getData(NEWS_URL);
-window.addEventListener("hashchange", ()=>{
+const getNewsFeed = ()=>{
+    const newsFeed = getData(NEWS_URL);
+    const mapResult = newsFeed.map((item)=>`<li><a href=#${item.id}><h1>${item.title}</h1>(${item.comments_count})</a></li>`
+    );
+    document.getElementById("root").innerHTML = mapResult;
+};
+const getNewsPage = ()=>{
     const id = location.hash.substring(1);
     const results = getData(CONTENT_URL.replace("@id", id));
     document.getElementById("root").innerHTML = "";
     document.getElementById("root").append(container);
     container.append(results.title);
-});
-const mapResult = newsFeed.map((item)=>`<li><a href=#${item.id}><h1>${item.title}</h1>(${item.comments_count})</a></li>`
-);
-// container.appendChild(mapResult)
-document.getElementById("root").innerHTML = mapResult;
+};
+const getRouter = ()=>{
+    const route = location.hash;
+    if (route === "") getNewsFeed();
+    else getNewsPage();
+};
+window.addEventListener("hashchange", getRouter);
+getRouter();
 
 },{}]},["i6bK6","dkd4W"], "dkd4W", "parcelRequire94c2")
 
